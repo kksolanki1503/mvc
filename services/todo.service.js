@@ -1,3 +1,5 @@
+const todoRepository = require("../repositories/todo.repository");
+
 let todos = [];
 class todoServices {
   getAll() {
@@ -6,12 +8,14 @@ class todoServices {
   getById(id) {
     return todos.filter((todo) => todo.id === id)[0];
   }
-  create(todoText) {
-    todos.push({ id: todos.length, text: todoText });
+  async create(todoText) {
+    todoText = todoText.toUpperCase();
+    return await todoRepository.create(todoText);
+    // todos.push({ id: todos.length, text: todoText });
   }
   delete(id) {
     todos.splice(id, 1);
   }
 }
 
-module.exports = todoServices;
+module.exports = new todoServices();

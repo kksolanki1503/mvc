@@ -1,6 +1,4 @@
-const TodoServices = require("../services/todo.service");
-
-const todoServices = new TodoServices();
+const todoServices = require("../services/todo.service");
 
 exports.getAllTodos = (req, res) => {
   const result = todoServices.getAll();
@@ -20,13 +18,17 @@ exports.getTodoById = (req, res) => {
     result: result || [],
   });
 };
-exports.createTodo = (req, res) => {
+exports.createTodo = async (req, res, next) => {
   const { todoText } = req.body;
-  todoServices.create(todoText);
-  return res.json({
-    msg: "created successfully",
-    // result: result,
-  });
+  const result = await todoServices.create(todoText);
+  try {
+    return res.json({
+      msg: "created successfully",
+      result: result,
+    });
+  } catch (error) {
+    next(error);
+  }
 };
 exports.deleteTodo = (req, res) => {
   const { id } = req.body;
